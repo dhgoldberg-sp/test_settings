@@ -39,7 +39,9 @@ jobs:
           echo ${TO_HASH}
           FROM_HASH=`git rev-parse origin/${BASE_BRANCH}`
           echo ${FROM_HASH}
-          if [ -n `git diff ${FROM_HASH} ${TO_HASH} vehicle_sim` ]
+          SUB_DIFF=`git diff ${FROM_HASH} ${TO_HASH} vehicle_sim`
+          echo sub diff ${SUB_DIFF}
+          if [ -n "$SUB_DIFF" ]
           then
             cd vehicle_sim
             git rev-parse HEAD
