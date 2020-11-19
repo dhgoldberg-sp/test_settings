@@ -1,0 +1,3 @@
+[submodule "vehicle_sim"]
+	path = vehicle_sim
+	url = ../vehicle_sim
