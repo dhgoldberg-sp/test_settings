@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Submodule Check
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
@@ -37,10 +37,8 @@ jobs:
             cd vehicle_sim
             SUB_NOW=`git rev-parse HEAD`
             SUB_MAIN_HEAD=`git rev-parse origin/main`
-            if [ "${SUB_NOW}" == "${SUB_MAIN_HEAD}" ]; then
-              exit 0
-            else
-              echo "::error submodule not up to date"
+            if [ "${SUB_NOW}" != "${SUB_MAIN_HEAD}" ]; then
+              echo "::error file=vehicle_sim::submodule not up to date"
               exit 1
             fi
           fi
