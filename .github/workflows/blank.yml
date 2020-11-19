@@ -11,7 +11,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  Check Submodule Commit:
+  Check-Submodule-Commit:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -25,19 +25,18 @@ jobs:
           fetch-depth: 0
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Check submodule
         run: |
-          PR=`jq -r ".number" "${GITHUB_EVENT_PATH}"`
           PR_BRANCH=`jq -r ".pull_request.head.ref" "${GITHUB_EVENT_PATH}"`
           BASE_BRANCH=`jq -r ".pull_request.base.ref" "${GITHUB_EVENT_PATH}"`
-          TO_HASH=`git rev-parse origin/${PR_BRANCH}`
-          FROM_HASH=`git rev-parse origin/${BASE_BRANCH}`
-          SUB_DIFF=`git diff ${FROM_HASH} ${TO_HASH} vehicle_sim`
+          PR_HEAD=`git rev-parse origin/${PR_BRANCH}`
+          MERGE_BASE=`git merge-base origin/${BASE_BRANCH} origin/${PR_BRANCH}`
+          SUB_DIFF=`git diff ${MERGE_BASE} ${PR_HEAD} vehicle_sim`
           if [[ ! -z "$SUB_DIFF" ]]; then
             cd vehicle_sim
-            SUB_NOW=`git rev-parse HEAD`
-            SUB_MAIN_HEAD=`git rev-parse origin/main`
-            if [ "${SUB_NOW}" != "${SUB_MAIN_HEAD}" ]; then
+            SUB_PR_HEAD=`git rev-parse HEAD`
+            SUB_MERGE_BASE_HEAD=`git rev-parse origin/main`
+            if [ "${SUB_PR_HEAD}" != "${SUB_MERGE_BASE_HEAD}" ]; then
               echo "::error file=vehicle_sim::submodule not up to date"
               exit 1
             fi
