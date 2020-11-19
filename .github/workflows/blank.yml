@@ -32,3 +32,6 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          git rev-parse HEAD
+          cd vehicle_sim
+          git rev-parse HEAD
