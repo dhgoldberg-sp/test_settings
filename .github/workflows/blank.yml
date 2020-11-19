@@ -45,7 +45,7 @@ jobs:
             cd vehicle_sim
             SUB_NOW=`git rev-parse HEAD`
             SUB_MAIN_HEAD=`git rev-parse origin/main`
-            if ["${SUB_NOW}" == "${SUB_MAIN_HEAD}"]; then
+            if [ "${SUB_NOW}" == "${SUB_MAIN_HEAD}" ]; then
               exit 0
             else
               echo submodule not up to date
