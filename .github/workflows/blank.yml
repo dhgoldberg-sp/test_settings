@@ -24,23 +24,15 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo running.... asdf
           PR=`jq -r ".number" "${GITHUB_EVENT_PATH}"`
           PR_BRANCH=`jq -r ".pull_request.head.ref" "${GITHUB_EVENT_PATH}"`
           BASE_BRANCH=`jq -r ".pull_request.base.ref" "${GITHUB_EVENT_PATH}"`
           TO_HASH=`git rev-parse origin/${PR_BRANCH}`
-          echo ${TO_HASH}
           FROM_HASH=`git rev-parse origin/${BASE_BRANCH}`
-          echo ${FROM_HASH}
           SUB_DIFF=`git diff ${FROM_HASH} ${TO_HASH} vehicle_sim`
-          echo sub diff ${SUB_DIFF}
           if [[ ! -z "$SUB_DIFF" ]]; then
             cd vehicle_sim
             SUB_NOW=`git rev-parse HEAD`
@@ -48,9 +40,7 @@ jobs:
             if [ "${SUB_NOW}" == "${SUB_MAIN_HEAD}" ]; then
               exit 0
             else
-              echo submodule not up to date
+              echo "::error submodule not up to date"
               exit 1
             fi
-          else
-            echo no change
           fi
