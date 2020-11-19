@@ -32,6 +32,13 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          git rev-parse HEAD
+          PR=`jq -r ".number" "${GITHUB_EVENT_PATH}"`
+          PR_BRANCH=`jq -r ".pull_request.head.ref" "${GITHUB_EVENT_PATH}"`
+          BASE_BRANCH=`jq -r ".pull_request.base.ref" "${GITHUB_EVENT_PATH}"`
+          TO_HASH="$(git rev-parse origin/${PR_BRANCH})"
+          echo ${TO_HASH}
+          FROM_HASH=$(git rev-parse origin/${BASE_BRANCH})
+          echo ${FROM_HASH}
           cd vehicle_sim
           git rev-parse HEAD
+          git rev-parse origin/main
